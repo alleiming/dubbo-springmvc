@@ -92,12 +92,20 @@ public class SpringmvcHttpServer implements RestServer {
 	public void deploy(Class resourceDef, Object resourceInstance, String contextPath) {
 
 		try {
+			
+			//由于dubbox提供的ServiceClassHolder不是一个实例化的对象，而是一个class 无法动态注册bean的url handler
+			//故 反射SpringExtensionFactory 拿到所有的ApplicatonContext 通过class类型获取bean
+			//但是有一个问题，如果存在多个ApplicatonContext有可能会获取到错误的bean
 			Object bean = null;
 			if (webApplicationContext != null && webApplicationContext.getParent() != null) {
-				bean=webApplicationContext.getParent().getBean((Class)resourceInstance);
-			}else{
-				bean = SpringUtil.getBean(resourceDef, firstLow((Class) resourceInstance));
+				bean = webApplicationContext.getParent().getBean((Class) resourceInstance);
+			} else {
+				bean = SpringUtil.getBean((Class) resourceInstance, firstLow(resourceDef));
+				if (bean == null) {
+					bean = SpringUtil.getBean(resourceDef, firstLow((Class) resourceInstance));
+				}
 			}
+
 			SpringUtil.registerHandler(dispatcher, bean);
 		} catch (Exception e) {
 			throw new RpcException(e);
@@ -107,7 +115,11 @@ public class SpringmvcHttpServer implements RestServer {
 
 	@Override
 	public void undeploy(Class resourceDef) {
+		try {
+			SpringUtil.unRegisterHandler(dispatcher, resourceDef);
+		} catch (Exception e) {
 
+		}
 	}
 
 	public static String firstLow(Class clazz) {

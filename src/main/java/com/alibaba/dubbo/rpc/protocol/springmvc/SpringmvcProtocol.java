@@ -37,8 +37,7 @@ import com.alibaba.dubbo.rpc.protocol.rest.RpcContextFilter;
 
 /**
  * 
- * @author wuyu
- *  DATA:2016-2-10
+ * @author wuyu DATA:2016-2-10
  */
 public class SpringmvcProtocol extends AbstractProxyProtocol {
 
@@ -77,14 +76,16 @@ public class SpringmvcProtocol extends AbstractProxyProtocol {
 			}
 		}
 
-		Class implClass = ServiceClassHolder.getInstance().popServiceClass();
+		//ServiceClassHolder获取的实例是个实例化的对象，而不是class
+		final Class implClass = ServiceClassHolder.getInstance().popServiceClass();
 
 		server.deploy(type, implClass, null);
 
 		return new Runnable() {
 			@Override
 			public void run() {
-
+				//由于获取不到bean的实例，无法动态卸载。
+				//servers.get(addr).undeploy(implClass);
 			}
 		};
 	}
