@@ -76,7 +76,7 @@ public class SpringmvcProtocol extends AbstractProxyProtocol {
 			}
 		}
 
-		//ServiceClassHolder获取的实例是个实例化的对象，而不是class
+		//ServiceClassHolder获取的实例是個class 而不是实例化的对象。
 		final Class implClass = ServiceClassHolder.getInstance().popServiceClass();
 
 		server.deploy(type, implClass, null);
