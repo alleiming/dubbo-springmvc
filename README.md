@@ -19,13 +19,32 @@
 			<version>4.1.7.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
-
+		
+		<!-- 如果要使用tomcat server -->
 		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-client</artifactId>
-			<version>3.0.7.Final</version>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>8.0.11</version>
 			<scope>compile</scope>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-logging-juli</artifactId>
+			<version>8.0.11</version>
+			<scope>compile</scope>
+		</dependency>
+
 #example
-<dubbo:protocol name="springmvc" server="tomcat" port="8080" />
+	<dubbo:protocol name="springmvc" server="tomcat" port="8080" />
+	
+#新增tomcat容器
+
+	public static void main(String[] args) {
+
+		ConfigUtils.getProperties().put("dubbo.spring.config", "classpath:applicationContext.xml");
+		ConfigUtils.getProperties().put("dubbo.tomcat.port", "8080");
+		com.alibaba.dubbo.container.Main.main(new String[] { "tomcat" });
+
+	}
+	
+	<dubbo:protocol name="springmvc" server="servlet" port="8080" />
