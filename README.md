@@ -48,3 +48,9 @@
 	}
 	
 	<dubbo:protocol name="springmvc" server="servlet" port="8080" />
+	
+	
+#增加异常处理SpringmvcExceptionHandler
+	1.自动将异常以json/xml方式响应给浏览器或调用的客户端
+	2.可以打上@ErrorMsg注解,自定义要返回异常信息.
+		@ErrorMsg(msg = "can not null",status=500,responseType="application/json;charset=utf-8")

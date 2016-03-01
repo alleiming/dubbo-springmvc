@@ -9,5 +9,7 @@
 	http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd ">
 
 
-	<mvc:annotation-driven/>
+	<mvc:annotation-driven />
+	<bean
+		class="com.alibaba.dubbo.rpc.protocol.springmvc.SpringmvcExceptionHandler" />
 </beans>
