@@ -13,31 +13,25 @@ import com.alibaba.dubbo.config.spring.extension.SpringExtensionFactory;
 
 public class SpringUtil {
 
-	private static SpringExtensionFactory factory = null;
-
 	@SuppressWarnings("unchecked")
 	public static Set<ApplicationContext> getApplicationContexts() {
-		if (factory == null) {
-			factory = new SpringExtensionFactory();
-		}
 		Field contextsFiled = ReflectionUtils.findField(SpringExtensionFactory.class, "contexts");
 		contextsFiled.setAccessible(true);
-		return (Set<ApplicationContext>) ReflectionUtils.getField(contextsFiled, factory);
+		return (Set<ApplicationContext>) ReflectionUtils.getField(contextsFiled, null);
 	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> T getBean(Class<T> type, String name) {
 		Set<ApplicationContext> contexts = getApplicationContexts();
-		Object instance = null;
 		for (ApplicationContext context : contexts) {
 			if (context.containsBean(name)) {
-				Object bean = context.getBean(name);
+				T bean = (T) context.getBean(name);
 				if (type.isInstance(bean)) {
-					instance = bean;
+					return bean;
 				}
 			}
 		}
-		return (T) instance;
+		return null;
 	}
 
 	public static <T> T getBean(Class<T> type) {
