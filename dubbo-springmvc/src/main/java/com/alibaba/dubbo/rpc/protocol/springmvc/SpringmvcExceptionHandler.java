@@ -30,19 +30,12 @@ public class SpringmvcExceptionHandler implements HandlerExceptionResolver {
 				e.printStackTrace();
 			}
 			return null;
-		} else {
-			try {
-				handlerExcption(response, null, ex);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
 		}
 		return null;
 	}
 
 	public void handlerExcption(HttpServletResponse response, ErrorMsg errorMsg, Exception ex) throws IOException {
-		if (errorMsg.responseType().equals(XML_TYPE)) {
+		if (errorMsg != null && errorMsg.responseType().equals(XML_TYPE)) {
 			handlerXml(response, errorMsg, ex);
 		} else {
 			handlerJson(response, errorMsg, ex);
