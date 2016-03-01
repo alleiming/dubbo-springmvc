@@ -68,7 +68,7 @@ public class SpringmvcProtocol extends AbstractProxyProtocol {
 
 	@Override
 	protected <T> Runnable doExport(T impl, Class<T> type, URL url) throws RpcException {
-		String addr = url.getIp() + ":" + url.getPort();
+		final String addr = url.getIp() + ":" + url.getPort();
 		RestServer server = servers.get(addr);
 		if (server == null) {
 			if (server == null) {
