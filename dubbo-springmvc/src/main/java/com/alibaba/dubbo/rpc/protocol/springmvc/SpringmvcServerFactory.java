@@ -6,8 +6,7 @@ import com.alibaba.dubbo.rpc.protocol.rest.RestServerFactory;
 
 /**
  * 
- * @author wuyu
- * DATA:2016-2-27
+ * @author wuyu DATA:2016-2-27
  */
 public class SpringmvcServerFactory extends RestServerFactory {
 

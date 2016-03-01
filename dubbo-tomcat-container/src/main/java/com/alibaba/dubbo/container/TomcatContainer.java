@@ -34,7 +34,7 @@ public class TomcatContainer implements Container {
 
 	public static final String DUBBO_SPRING_CONFIG = "dubbo.spring.config";
 
-	public final int DEFAULT_JETTY_PORT = 8080;
+	public final int DEFAULT_TOMCAT_PORT = 8080;
 
 	public static int PORT = 8080;
 
@@ -44,7 +44,7 @@ public class TomcatContainer implements Container {
 		String baseDir = new File(System.getProperty("java.io.tmpdir")).getAbsolutePath();
 		String serverPort = ConfigUtils.getProperty(TOMCAT_PORT);
 		if (serverPort == null || serverPort.length() == 0) {
-			PORT = DEFAULT_JETTY_PORT;
+			PORT = DEFAULT_TOMCAT_PORT;
 		} else {
 			PORT = Integer.parseInt(serverPort);
 		}

@@ -9,7 +9,14 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * 
+ * @author wuyu DATA:2016-3-1
+ */
 public class SpringmvcExceptionHandler implements HandlerExceptionResolver {
+
+	public static final String JSON_TYPE = "application/json;charset=utf-8";
+	public static final String XML_TYPE = "text/xml;charset=utf-8";
 
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
@@ -35,7 +42,7 @@ public class SpringmvcExceptionHandler implements HandlerExceptionResolver {
 	}
 
 	public void handlerExcption(HttpServletResponse response, ErrorMsg errorMsg, Exception ex) throws IOException {
-		if (errorMsg.responseType().equals("text/xml;charset=utf-8")) {
+		if (errorMsg.responseType().equals(XML_TYPE)) {
 			handlerXml(response, errorMsg, ex);
 		} else {
 			handlerJson(response, errorMsg, ex);
@@ -46,10 +53,10 @@ public class SpringmvcExceptionHandler implements HandlerExceptionResolver {
 		String msg = "<server><msg>%s</msg><status>%d</status></server>";
 		if (errorMsg != null) {
 			String message = String.format(msg, errorMsg.msg(), errorMsg.status());
-			writerMsg(response, message, "text/xml;charset=utf-8");
+			writerMsg(response, message, XML_TYPE);
 		} else {
 			String message = String.format(msg, ex.getMessage(), 500);
-			writerMsg(response, message, "text/xml;charset=utf-8");
+			writerMsg(response, message, XML_TYPE);
 		}
 	}
 
@@ -57,10 +64,10 @@ public class SpringmvcExceptionHandler implements HandlerExceptionResolver {
 		String msg = "{\"msg\":\"%s\",\"status\":%d}";
 		if (errorMsg != null) {
 			String message = String.format(msg, errorMsg.msg(), errorMsg.status());
-			writerMsg(response, message, "application/json;charset=utf-8");
+			writerMsg(response, message, JSON_TYPE);
 		} else {
-			String message = String.format(msg, ex.getMessage(), errorMsg.status());
-			writerMsg(response, message, "application/json;charset=utf-8");
+			String message = String.format(msg, ex.getMessage(), 500);
+			writerMsg(response, message, JSON_TYPE);
 		}
 	}
 

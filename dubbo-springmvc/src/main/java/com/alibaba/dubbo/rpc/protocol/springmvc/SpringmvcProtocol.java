@@ -77,8 +77,8 @@ public class SpringmvcProtocol extends AbstractProxyProtocol {
 	}
 
 	public void destroy() {
+		servers.clear();
 		super.destroy();
 	}
-
 
 }
