@@ -29,11 +29,13 @@ import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.dubbo.remoting.http.HttpBinder;
 import com.alibaba.dubbo.remoting.http.servlet.DispatcherServlet;
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.dubbo.rpc.RpcException;
 import com.alibaba.dubbo.rpc.ServiceClassHolder;
 import com.alibaba.dubbo.rpc.protocol.AbstractProxyProtocol;
 import com.alibaba.dubbo.rpc.protocol.rest.RestServer;
 import com.alibaba.dubbo.rpc.protocol.rest.RpcContextFilter;
+import com.alibaba.dubbo.rpc.protocol.rest.RpcExceptionMapper;
 
 /**
  * 
@@ -76,7 +78,7 @@ public class SpringmvcProtocol extends AbstractProxyProtocol {
 			}
 		}
 
-		//ServiceClassHolder获取的实例是個class 而不是实例化的对象。
+		// ServiceClassHolder获取的实例是個class 而不是实例化的对象。
 		final Class implClass = ServiceClassHolder.getInstance().popServiceClass();
 
 		server.deploy(type, implClass, null);
@@ -84,78 +86,15 @@ public class SpringmvcProtocol extends AbstractProxyProtocol {
 		return new Runnable() {
 			@Override
 			public void run() {
-				//由于获取不到bean的实例，无法动态卸载。
-				//servers.get(addr).undeploy(implClass);
+				servers.get(addr).undeploy(implClass);
 			}
 		};
 	}
 
 	@Override
+	// 暂时不支持基于springmvc的消费
 	protected <T> T doRefer(Class<T> type, URL url) throws RpcException {
-		if (connectionMonitor == null) {
-			connectionMonitor = new ConnectionMonitor();
-		}
-
-		// TODO more configs to add
-
-		PoolingClientConnectionManager connectionManager = new PoolingClientConnectionManager();
-		// 20 is the default maxTotal of current PoolingClientConnectionManager
-		connectionManager.setMaxTotal(url.getParameter(Constants.CONNECTIONS_KEY, 20));
-		connectionManager.setDefaultMaxPerRoute(url.getParameter(Constants.CONNECTIONS_KEY, 20));
-
-		connectionMonitor.addConnectionManager(connectionManager);
-
-		// BasicHttpContext localContext = new BasicHttpContext();
-
-		DefaultHttpClient httpClient = new DefaultHttpClient(connectionManager);
-
-		httpClient.setKeepAliveStrategy(new ConnectionKeepAliveStrategy() {
-			public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
-				HeaderElementIterator it = new BasicHeaderElementIterator(
-						response.headerIterator(HTTP.CONN_KEEP_ALIVE));
-				while (it.hasNext()) {
-					HeaderElement he = it.nextElement();
-					String param = he.getName();
-					String value = he.getValue();
-					if (value != null && param.equalsIgnoreCase("timeout")) {
-						return Long.parseLong(value) * 1000;
-					}
-				}
-				// TODO constant
-				return 30 * 1000;
-			}
-		});
-
-		HttpParams params = httpClient.getParams();
-		// TODO currently no xml config for Constants.CONNECT_TIMEOUT_KEY so we
-		// directly reuse Constants.TIMEOUT_KEY for now
-		HttpConnectionParams.setConnectionTimeout(params,
-				url.getParameter(Constants.TIMEOUT_KEY, Constants.DEFAULT_TIMEOUT));
-		HttpConnectionParams.setSoTimeout(params, url.getParameter(Constants.TIMEOUT_KEY, Constants.DEFAULT_TIMEOUT));
-		HttpConnectionParams.setTcpNoDelay(params, true);
-		HttpConnectionParams.setSoKeepalive(params, true);
-
-		ApacheHttpClient4Engine engine = new ApacheHttpClient4Engine(
-				httpClient/* , localContext */);
-
-		ResteasyClient client = new ResteasyClientBuilder().httpEngine(engine).build();
-		clients.add(client);
-
-		client.register(RpcContextFilter.class);
-		for (String clazz : Constants.COMMA_SPLIT_PATTERN.split(url.getParameter(Constants.EXTENSION_KEY, ""))) {
-			if (!StringUtils.isEmpty(clazz)) {
-				try {
-					client.register(Thread.currentThread().getContextClassLoader().loadClass(clazz.trim()));
-				} catch (ClassNotFoundException e) {
-					throw new RpcException("Error loading JAX-RS extension class: " + clazz.trim(), e);
-				}
-			}
-		}
-
-		// TODO protocol
-		ResteasyWebTarget target = client
-				.target("http://" + url.getHost() + ":" + url.getPort() + "/" + getContextPath(url));
-		return target.proxy(type);
+		return null;
 	}
 
 	protected String getContextPath(URL url) {
