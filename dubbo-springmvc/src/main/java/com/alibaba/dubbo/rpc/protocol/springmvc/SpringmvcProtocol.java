@@ -1,41 +1,16 @@
 package com.alibaba.dubbo.rpc.protocol.springmvc;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.http.HeaderElement;
-import org.apache.http.HeaderElementIterator;
-import org.apache.http.HttpResponse;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.ConnectionKeepAliveStrategy;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
-import org.apache.http.message.BasicHeaderElementIterator;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.protocol.HttpContext;
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
-import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
 
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.dubbo.remoting.http.HttpBinder;
 import com.alibaba.dubbo.remoting.http.servlet.DispatcherServlet;
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.dubbo.rpc.RpcException;
 import com.alibaba.dubbo.rpc.ServiceClassHolder;
 import com.alibaba.dubbo.rpc.protocol.AbstractProxyProtocol;
 import com.alibaba.dubbo.rpc.protocol.rest.RestServer;
-import com.alibaba.dubbo.rpc.protocol.rest.RpcContextFilter;
-import com.alibaba.dubbo.rpc.protocol.rest.RpcExceptionMapper;
 
 /**
  * 
@@ -50,12 +25,6 @@ public class SpringmvcProtocol extends AbstractProxyProtocol {
 	private final Map<String, DispatcherServlet> dispatcherServlets = new ConcurrentHashMap<String, DispatcherServlet>();
 
 	private final SpringmvcServerFactory serverFactory = new SpringmvcServerFactory();
-
-	// TODO in the future maybe we can just use a single rest client and
-	// connection manager
-	private volatile ConnectionMonitor connectionMonitor;
-
-	private final List<ResteasyClient> clients = Collections.synchronizedList(new LinkedList<ResteasyClient>());
 
 	@Override
 	public int getDefaultPort() {
@@ -109,69 +78,7 @@ public class SpringmvcProtocol extends AbstractProxyProtocol {
 
 	public void destroy() {
 		super.destroy();
-
-		if (connectionMonitor != null) {
-			connectionMonitor.shutdown();
-		}
-
-		for (Map.Entry<String, RestServer> entry : servers.entrySet()) {
-			try {
-				if (logger.isInfoEnabled()) {
-					logger.info("Closing the rest server at " + entry.getKey());
-				}
-				entry.getValue().stop();
-			} catch (Throwable t) {
-				logger.warn("Error closing rest server", t);
-			}
-		}
-		servers.clear();
-
-		if (logger.isInfoEnabled()) {
-			logger.info("Closing rest clients");
-		}
-		for (ResteasyClient client : clients) {
-			try {
-				client.close();
-			} catch (Throwable t) {
-				logger.warn("Error closing rest client", t);
-			}
-		}
-		clients.clear();
 	}
 
-	protected class ConnectionMonitor extends Thread {
-		private volatile boolean shutdown;
-		private final List<ClientConnectionManager> connectionManagers = Collections
-				.synchronizedList(new LinkedList<ClientConnectionManager>());
-
-		public void addConnectionManager(ClientConnectionManager connectionManager) {
-			connectionManagers.add(connectionManager);
-		}
-
-		public void run() {
-			try {
-				while (!shutdown) {
-					synchronized (this) {
-						wait(1000);
-						for (ClientConnectionManager connectionManager : connectionManagers) {
-							connectionManager.closeExpiredConnections();
-							// TODO constant
-							connectionManager.closeIdleConnections(30, TimeUnit.SECONDS);
-						}
-					}
-				}
-			} catch (InterruptedException ex) {
-				shutdown();
-			}
-		}
-
-		public void shutdown() {
-			shutdown = true;
-			connectionManagers.clear();
-			synchronized (this) {
-				notifyAll();
-			}
-		}
-	}
 
 }
