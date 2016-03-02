@@ -15,6 +15,8 @@ public @interface ErrorMsg {
 
 	int status() default 500;
 
+	boolean customerMsgFormat() default false;
+
 	String responseType() default "application/json;charset=utf-8";
 
 }

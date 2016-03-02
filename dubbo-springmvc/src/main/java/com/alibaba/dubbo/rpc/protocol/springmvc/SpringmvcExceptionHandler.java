@@ -29,17 +29,28 @@ public class SpringmvcExceptionHandler implements HandlerExceptionResolver {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return null;
 		}
 		return null;
 	}
 
 	public void handlerExcption(HttpServletResponse response, ErrorMsg errorMsg, Exception ex) throws IOException {
-		if (errorMsg != null && errorMsg.responseType().equals(XML_TYPE)) {
-			handlerXml(response, errorMsg, ex);
-		} else {
-			handlerJson(response, errorMsg, ex);
+
+		if (errorMsg != null && errorMsg.customerMsgFormat()) {
+			handlerCustomerMsg(response, errorMsg, ex);
+			return;
 		}
+
+		if (errorMsg != null && errorMsg.responseType().contains("xml")) {
+			handlerXml(response, errorMsg, ex);
+			return;
+		}
+
+		handlerJson(response, errorMsg, ex);
+
+	}
+
+	public void handlerCustomerMsg(HttpServletResponse response, ErrorMsg errorMsg, Exception ex) throws IOException {
+		writerMsg(response, errorMsg.msg(), errorMsg.responseType());
 	}
 
 	public void handlerXml(HttpServletResponse response, ErrorMsg errorMsg, Exception ex) throws IOException {
@@ -56,10 +67,10 @@ public class SpringmvcExceptionHandler implements HandlerExceptionResolver {
 	public void handlerJson(HttpServletResponse response, ErrorMsg errorMsg, Exception ex) throws IOException {
 		String msg = "{\"msg\":\"%s\",\"status\":%d}";
 		if (errorMsg != null) {
-			String message = String.format(msg, errorMsg.msg(), errorMsg.status());
+			String message = String.format(msg, errorMsg.msg().replace("\"", "'"), errorMsg.status());
 			writerMsg(response, message, JSON_TYPE);
 		} else {
-			String message = String.format(msg, ex.getMessage(), 500);
+			String message = String.format(msg, ex.getMessage().replace("\"", "'"), 500);
 			writerMsg(response, message, JSON_TYPE);
 		}
 	}
