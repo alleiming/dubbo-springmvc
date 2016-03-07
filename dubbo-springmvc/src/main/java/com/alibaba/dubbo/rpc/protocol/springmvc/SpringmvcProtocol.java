@@ -16,7 +16,7 @@ import com.alibaba.dubbo.rpc.protocol.AbstractProxyProtocol;
  */
 public class SpringmvcProtocol extends AbstractProxyProtocol {
 
-	private static final int DEFAULT_PORT = 80;
+	private static final int DEFAULT_PORT = 8080;
 
 	private final Map<String, SpringmvcHttpServer> servers = new ConcurrentHashMap<String, SpringmvcHttpServer>();
 
