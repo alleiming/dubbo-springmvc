@@ -78,6 +78,12 @@
 			<scope>compile</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.3.1.Final</version>
+		</dependency>
+
 		<!-- 如果要使用tomcat server -->
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
@@ -99,6 +105,7 @@
 		</dependency>
 
 	</dependencies>
+
 
 
 
