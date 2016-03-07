@@ -77,7 +77,10 @@ public class SpringmvcExceptionHandler implements HandlerExceptionResolver {
 
 	public void writerMsg(HttpServletResponse response, String msg, String responseType) throws IOException {
 		response.setContentType(responseType);
-		response.getWriter().write(msg);
+		try {
+			response.getWriter().write(msg);
+		} catch (java.lang.IllegalStateException e) {
+		}
 	}
 
 }

@@ -11,6 +11,11 @@ import org.springframework.util.ReflectionUtils;
 
 import com.alibaba.dubbo.config.spring.extension.SpringExtensionFactory;
 
+/**
+ * 
+ * @author wuyu
+ *
+ */
 public class SpringUtil {
 
 	@SuppressWarnings("unchecked")

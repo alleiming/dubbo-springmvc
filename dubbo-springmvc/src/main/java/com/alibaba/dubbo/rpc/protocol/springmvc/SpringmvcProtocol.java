@@ -8,9 +8,7 @@ import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.remoting.http.HttpBinder;
 import com.alibaba.dubbo.remoting.http.servlet.DispatcherServlet;
 import com.alibaba.dubbo.rpc.RpcException;
-import com.alibaba.dubbo.rpc.ServiceClassHolder;
 import com.alibaba.dubbo.rpc.protocol.AbstractProxyProtocol;
-import com.alibaba.dubbo.rpc.protocol.rest.RestServer;
 
 /**
  * 
@@ -20,7 +18,7 @@ public class SpringmvcProtocol extends AbstractProxyProtocol {
 
 	private static final int DEFAULT_PORT = 80;
 
-	private final Map<String, RestServer> servers = new ConcurrentHashMap<String, RestServer>();
+	private final Map<String, SpringmvcHttpServer> servers = new ConcurrentHashMap<String, SpringmvcHttpServer>();
 
 	private final Map<String, DispatcherServlet> dispatcherServlets = new ConcurrentHashMap<String, DispatcherServlet>();
 
@@ -36,26 +34,22 @@ public class SpringmvcProtocol extends AbstractProxyProtocol {
 	}
 
 	@Override
-	protected <T> Runnable doExport(T impl, Class<T> type, URL url) throws RpcException {
+	protected <T> Runnable doExport(T impl, final Class<T> type, URL url) throws RpcException {
 		final String addr = url.getIp() + ":" + url.getPort();
-		RestServer server = servers.get(addr);
+		SpringmvcHttpServer server = servers.get(addr);
 		if (server == null) {
 			if (server == null) {
-				server = serverFactory.createServer(url.getParameter(Constants.SERVER_KEY, "jetty"));
+				server = serverFactory.createServer(url.getParameter(Constants.SERVER_KEY, "jetty9"));
 				server.start(url);
 				servers.put(addr, server);
 			}
 		}
 
-		// ServiceClassHolder获取的实例是個class 而不是实例化的对象。
-		final Class implClass = ServiceClassHolder.getInstance().popServiceClass();
-
-		server.deploy(type, implClass, null);
+		server.deploy(type, url);
 
 		return new Runnable() {
-			@Override
 			public void run() {
-				servers.get(addr).undeploy(implClass);
+				servers.get(addr).undeploy(type);
 			}
 		};
 	}
@@ -64,15 +58,36 @@ public class SpringmvcProtocol extends AbstractProxyProtocol {
 	// 暂时不支持基于springmvc的消费
 	protected <T> T doRefer(Class<T> type, URL url) throws RpcException {
 		return null;
-	}
-
-	protected String getContextPath(URL url) {
-		int pos = url.getPath().lastIndexOf("/");
-		return pos > 0 ? url.getPath().substring(0, pos) : "";
+		// PoolingHttpClientConnectionManager manager=new
+		// PoolingHttpClientConnectionManager();
+		// CloseableHttpClient httpClient =
+		// HttpClientBuilder.create().setConnectionManager(manager).build();
+		// HttpComponentsClientHttpRequestFactory factory=new
+		// HttpComponentsClientHttpRequestFactory(httpClient);
+		// final RestTemplate restTemplate=new RestTemplate(factory);
+		// List<HttpMessageConverter<?>> messageConverters;
+		// //restTemplate.setMessageConverters(messageConverters);
+		//
+		// final String httpUrl =
+		// url.setProtocol("http").toJavaURL().toString();
+		//
+		// return (T)
+		// Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+		// new Class[]{type}, new InvocationHandler() {
+		//
+		// @Override
+		// public Object invoke(Object proxy, Method method, Object[] args)
+		// throws Throwable {
+		// String methodName = method.getName();
+		// Class<?> returnType = method.getReturnType();
+		// Object request = null;
+		// restTemplate.postForEntity(httpUrl, request, returnType);
+		// return null;
+		// }
+		// });
 	}
 
 	protected int getErrorCode(Throwable e) {
-		// TODO
 		return super.getErrorCode(e);
 	}
 

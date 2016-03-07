@@ -1,14 +1,12 @@
 package com.alibaba.dubbo.rpc.protocol.springmvc;
 
 import com.alibaba.dubbo.remoting.http.HttpBinder;
-import com.alibaba.dubbo.rpc.protocol.rest.RestServer;
-import com.alibaba.dubbo.rpc.protocol.rest.RestServerFactory;
 
 /**
  * 
  * @author wuyu DATA:2016-2-27
  */
-public class SpringmvcServerFactory extends RestServerFactory {
+public class SpringmvcServerFactory {
 
 	private HttpBinder httpBinder;
 
@@ -16,13 +14,13 @@ public class SpringmvcServerFactory extends RestServerFactory {
 		this.httpBinder = httpBinder;
 	}
 
-	@Override
-	public RestServer createServer(String name) {
-		if ("servlet".equalsIgnoreCase(name) || "jetty".equalsIgnoreCase(name) || "tomcat".equalsIgnoreCase(name)) {
+	public SpringmvcHttpServer createServer(String name) {
+		if ("servlet".equalsIgnoreCase(name) || "jetty9".equalsIgnoreCase(name) || "tomcat".equalsIgnoreCase(name)) {
 			return new SpringmvcHttpServer(httpBinder);
 		}
 
-		throw new IllegalArgumentException("Unrecognized server name: " + name);
+		throw new IllegalArgumentException(
+				"Unrecognized server name: " + name + ",If you are using jetty, please use jetty9!");
 	}
 
 }
