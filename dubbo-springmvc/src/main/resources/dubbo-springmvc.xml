@@ -10,6 +10,7 @@
 
 
 	<mvc:annotation-driven />
+
 	<bean
 		class="com.alibaba.dubbo.rpc.protocol.springmvc.SpringmvcExceptionHandler" />
 </beans>
