@@ -32,6 +32,7 @@ import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConv
 
 /**
  * 为了省略 @ResponseBody注解
+ * 
  * @author wuyu
  *
  */
@@ -55,7 +56,7 @@ public class RequestResponseBodyMethodProcessorWrap extends AbstractMessageConve
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
-		return true;
+		return parameter.hasParameterAnnotation(RequestBody.class);
 	}
 
 	@Override
