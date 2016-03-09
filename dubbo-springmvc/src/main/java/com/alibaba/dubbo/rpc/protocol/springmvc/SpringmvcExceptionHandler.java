@@ -70,7 +70,13 @@ public class SpringmvcExceptionHandler implements HandlerExceptionResolver {
 			String message = String.format(msg, errorMsg.msg().replace("\"", "'"), errorMsg.status());
 			writerMsg(response, message, JSON_TYPE);
 		} else {
-			String message = String.format(msg, ex.getMessage().replace("\"", "'"), 500);
+			String message = "";
+			if (ex.getMessage() != null) {
+				message = String.format(msg, ex.getMessage().replace("\"", "'"), 500);
+			} else {
+				message = String.format(msg, ex.toString().replace("\"", "'"), 500);
+			}
+
 			writerMsg(response, message, JSON_TYPE);
 		}
 	}
