@@ -56,8 +56,8 @@ public class SpringmvcHttpServer {
 	private HttpServer httpServer;
 	private List<String> produce = Arrays.asList("application/json;charset=utf-8", "text/xml;charset=utf-8");
 	private List<String> applicationTypes = Arrays.asList("json", "xml");
-	private Map<Object, HashSet<String>> urls = new ConcurrentHashMap<Object, HashSet<String>>();
-	private Map<Object, HashSet<RequestMappingInfo>> mappingds = new ConcurrentHashMap<Object, HashSet<RequestMappingInfo>>();
+	private final Map<Object, HashSet<String>> urls = new ConcurrentHashMap<Object, HashSet<String>>();
+	private final Map<Object, HashSet<RequestMappingInfo>> mappingds = new ConcurrentHashMap<Object, HashSet<RequestMappingInfo>>();
 
 	public SpringmvcHttpServer(HttpBinder httpBinder) {
 		this.httpBinder = httpBinder;
@@ -107,6 +107,15 @@ public class SpringmvcHttpServer {
 		public void handle(HttpServletRequest request, HttpServletResponse response)
 				throws IOException, ServletException {
 			RpcContext.getContext().setRemoteAddress(request.getRemoteAddr(), request.getRemotePort());
+			String requestURI = request.getRequestURI();
+			if ("/services".equals(requestURI)) {
+				String genHtml = WebManager.genHtml(urls);
+				response.setContentType("text/html;charset=utf-8");
+				response.getWriter().write(genHtml);
+				response.flushBuffer();
+				return;
+			}
+
 			dispatcher.service(request, response);
 		}
 	}
@@ -124,7 +133,7 @@ public class SpringmvcHttpServer {
 			Set<Object> beans = SpringUtil.getBeans(resourceDef);
 			for (Object bean : beans) {
 				registerHandler(bean);
-				detectHandlerMethods(resourceDef,bean, url);
+				detectHandlerMethods(resourceDef, bean, url);
 			}
 		} catch (Exception e) {
 			throw new RpcException(e);
@@ -212,10 +221,10 @@ public class SpringmvcHttpServer {
 		registerHandler.invoke(requestMapping, handler);
 	}
 
-	protected void detectHandlerMethods(Object type,final Object handler, URL url) throws Exception {
+	protected void detectHandlerMethods(Object type, final Object handler, URL url) throws Exception {
 		Set<Method> methods = selectMethods(handler);
 		String path = "%s%s/%s/%s/%s/%s";
-		String serviceName = firstLow(((Class)type).getSimpleName());
+		String serviceName = firstLow(((Class) type).getSimpleName());
 		String version = url.getParameter("version", "1.0.0");
 		String group = url.getParameter("group", "defaultGroup");
 		String contextPath = getContextPath(url).equals("") ? "" : getContextPath(url) + "/";
@@ -226,7 +235,7 @@ public class SpringmvcHttpServer {
 				String p = String.format(path, contextPath, group, version, applicationTypes.get(i), serviceName,
 						method.getName());
 				registerHandlerMethod(handler, method, p, new String[] { produce.get(i) });
-
+				paths.add(p);
 			}
 		}
 		urls.put(handler, paths);
@@ -254,6 +263,7 @@ public class SpringmvcHttpServer {
 		} else {
 			list = new HashSet<RequestMappingInfo>();
 			list.add(requestMappingInfo);
+			mappingds.put(handler, list);
 		}
 		registerHandlerMethod(handler, method, requestMappingInfo);
 	}

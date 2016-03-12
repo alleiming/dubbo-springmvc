@@ -20,6 +20,8 @@
 	
 	同时也支持springmvc的注解,自定义url使用.
 	
+	可使用http://ip:port/services查看发布的url服务.
+	
 		
 #安装
 mvn install -Dmaven.test.skip=true
