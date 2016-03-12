@@ -36,6 +36,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import com.alibaba.dubbo.common.URL;
+import com.alibaba.dubbo.common.utils.NetUtils;
 import com.alibaba.dubbo.remoting.http.HttpBinder;
 import com.alibaba.dubbo.remoting.http.HttpHandler;
 import com.alibaba.dubbo.remoting.http.HttpServer;
@@ -109,7 +110,10 @@ public class SpringmvcHttpServer {
 			RpcContext.getContext().setRemoteAddress(request.getRemoteAddr(), request.getRemotePort());
 			String requestURI = request.getRequestURI();
 			if ("/services".equals(requestURI)) {
-				String genHtml = WebManager.genHtml(urls);
+				int serverPort = request.getServerPort();
+				String hostAddress = NetUtils.getLocalAddress().getHostAddress();
+				String addr = "http://" + hostAddress + ":" + serverPort + "/";
+				String genHtml = WebManager.genHtml(urls,addr);
 				response.setContentType("text/html;charset=utf-8");
 				response.getWriter().write(genHtml);
 				response.flushBuffer();
