@@ -112,8 +112,8 @@ public class SpringmvcHttpServer {
 			if ("/services".equals(requestURI)) {
 				int serverPort = request.getServerPort();
 				String hostAddress = NetUtils.getLocalAddress().getHostAddress();
-				String addr = "http://" + hostAddress + ":" + serverPort + "/";
-				String genHtml = WebManager.genHtml(urls,addr);
+				String addr = request.getScheme() + "://" + hostAddress + ":" + serverPort + "/";
+				String genHtml = WebManager.genHtml(urls, addr);
 				response.setContentType("text/html;charset=utf-8");
 				response.getWriter().write(genHtml);
 				response.flushBuffer();

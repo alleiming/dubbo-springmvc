@@ -55,11 +55,6 @@
 
 
 		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.7</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 			<version>4.4.1</version>
@@ -111,18 +106,6 @@
 
 	</dependencies>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>Snapshots</id>
-			<name>Snapshots</name>
-			<url>http://zrpc5.wuyu.pub:8081/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-		<repository>
-			<id>Releases</id>
-			<name>Releases</name>
-			<url>http://zrpc5.wuyu.pub:8081/nexus/content/repositories/releases/</url>
-		</repository>
-	</distributionManagement>
 
 
 	<build>
