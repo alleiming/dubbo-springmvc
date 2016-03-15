@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class WebManager {
 
-	private static String profix = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><script src=\"http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js\"></script><link rel = \"stylesheet\" href=\"http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css\"><script src=\"http://cdn.bootcss.com/bootstrap/2.3.1/js/bootstrap-transition.js\"></script><script src=\"http://cdn.bootcss.com/bootstrap/2.3.1/js/bootstrap-modal.js\"></script>%s<title>Dubbo-springmvc Manager</title></head><body><div class=\"container\"><table class=\"table\"><thead><tr><th>服务名</th><th>方法</th><th>url</th><th>操作</th></tr>";
+	private static String profix = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><script src=\"http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js\"></script><link rel = \"stylesheet\" href=\"http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css\"><script src=\"http://cdn.bootcss.com/bootstrap/2.3.1/js/bootstrap-transition.js\"></script><script src=\"http://cdn.bootcss.com/bootstrap/2.3.1/js/bootstrap-modal.js\"></script>%s<title>Dubbo-springmvc Manager</title></head><body><div class=\"container\"><table class=\"table table-striped  table-hover\"><thead><tr><th>服务名</th><th>方法</th><th>url</th><th>操作</th></tr>";
 	private static String suffix = "<tbody>%s</tbody></table></div>%s</body></html>";
 	private static String template = "<tr class=\"%s\"><td>%s</td><td>%s</td></td><td><a href=\"%s\">%s</td><td><button onclick='invokerPop(\"%s\")' class=\"btn btn-default btn-primary btn-sm\">调用</button></td></tr>";
 	private static List<String> cssTrClass = Arrays.asList("", "info");

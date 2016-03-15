@@ -70,7 +70,7 @@ public class SpringmvcHttpServer {
 	}
 
 	protected void doStart(URL url) {
-		httpServer = httpBinder.bind(url, new RestHandler());
+		httpServer = httpBinder.bind(url, new SpringmvcHandler());
 
 		ServletContext servletContext = ServletManager.getInstance().getServletContext(url.getPort());
 		if (servletContext == null) {
@@ -104,7 +104,7 @@ public class SpringmvcHttpServer {
 		return dispatcher;
 	}
 
-	private class RestHandler implements HttpHandler {
+	private class SpringmvcHandler implements HttpHandler {
 		public void handle(HttpServletRequest request, HttpServletResponse response)
 				throws IOException, ServletException {
 			RpcContext.getContext().setRemoteAddress(request.getRemoteAddr(), request.getRemotePort());
