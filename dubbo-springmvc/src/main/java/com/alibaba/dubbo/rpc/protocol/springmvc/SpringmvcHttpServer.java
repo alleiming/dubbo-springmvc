@@ -229,7 +229,7 @@ public class SpringmvcHttpServer {
 		Set<Method> methods = selectMethods(handler);
 		String path = "%s%s/%s/%s/%s/%s";
 		String serviceName = firstLow(((Class) type).getSimpleName());
-		String version = url.getParameter("version", "1.0.0");
+		String version = url.getParameter("version", "0.0.0");
 		String group = url.getParameter("group", "defaultGroup");
 		String contextPath = getContextPath(url).equals("") ? "" : getContextPath(url) + "/";
 
