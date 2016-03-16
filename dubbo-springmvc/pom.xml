@@ -82,7 +82,7 @@
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-core</artifactId>
-			<version>8.0.11</version>
+			<version>8.0.28</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -95,7 +95,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty.aggregate</groupId>
 			<artifactId>jetty-all</artifactId>
-			<version>9.2.15.v20160210</version>
+			<version>9.2.11.v20150529</version>
 		</dependency>
 
 	</dependencies>

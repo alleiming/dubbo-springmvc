@@ -1,16 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.vcg</groupId>
-  <artifactId>dubbo-springmvc-example</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+	<groupId>com.vcg</groupId>
+	<artifactId>dubbo-springmvc-example</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
-  <name>dubbo-springmvc-example</name>
-  <url>http://maven.apache.org</url>
+	<name>dubbo-springmvc-example</name>
+	<url>http://maven.apache.org</url>
 
-<properties>
+	<properties>
 		<org.springframework-version>4.1.7.RELEASE</org.springframework-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -18,34 +18,39 @@
 
 
 	<dependencies>
-	
-	
+
+
 		<!-- dubbo-springmvc插件 -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>dubbo-springmvc</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		
+
 		<!-- 如果要使用tomcat server -->
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-core</artifactId>
-			<version>8.0.11</version>
+			<version>8.0.28</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-logging-juli</artifactId>
 			<version>8.0.11</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-juli</artifactId>
+			<version>8.0.28</version>
+		</dependency>
+
 		<!-- 如果要使用jett9 server -->
 		<dependency>
 			<groupId>org.eclipse.jetty.aggregate</groupId>
 			<artifactId>jetty-all</artifactId>
-			<version>9.2.15.v20160210</version>
+			<version>9.2.11.v20150529</version>
 		</dependency>
-		
+
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -63,18 +68,11 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.3.3</version>
 		</dependency>
-		
+
 		<!--springmvc 转 Json -->
-<!-- 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.13</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
-			<version>1.9.13</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.codehaus.jackson</groupId> <artifactId>jackson-mapper-asl</artifactId> 
+			<version>1.9.13</version> </dependency> <dependency> <groupId>org.codehaus.jackson</groupId> 
+			<artifactId>jackson-core-asl</artifactId> <version>1.9.13</version> </dependency> -->
 		<!-- dubbo 依赖 -->
 		<dependency>
 			<groupId>org.apache.zookeeper</groupId>
@@ -236,12 +234,12 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>2.4.1</version>
+			<version>2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.4.1</version>
+			<version>2.3</version>
 		</dependency>
 
 		<!-- cglib代理 -->
@@ -255,7 +253,7 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.2.7</version>
+			<version>1.2.6</version>
 		</dependency>
 
 	</dependencies>
