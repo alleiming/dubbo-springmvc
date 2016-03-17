@@ -58,7 +58,7 @@ public class Jetty9HttpServer extends AbstractHttpServer {
 			server.start();
 		} catch (Exception e) {
 			throw new IllegalStateException(
-					"Failed to start jetty8 server on " + url.getAddress() + ", cause: " + e.getMessage(), e);
+					"Failed to start jetty9 server on " + url.getAddress() + ", cause: " + e.getMessage(), e);
 		}
 	}
 

@@ -1,9 +1,8 @@
 package com.alibaba.dubbo.rpc.protocol.springmvc;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.context.ApplicationContext;
@@ -56,9 +55,9 @@ public class SpringUtil {
 		return null;
 	}
 
-	public static <T> List<String> getBeanNamesForType(Class<T> type) {
+	public static <T> Set<String> getBeanNamesForType(Class<T> type) {
 		Set<ApplicationContext> contexts = getApplicationContexts();
-		List<String> beanNames = new ArrayList<String>();
+		Set<String> beanNames = new HashSet<String>();
 		for (ApplicationContext context : contexts) {
 			String[] beanName = context.getBeanNamesForType(type);
 			beanNames.addAll(Arrays.asList(beanName));
@@ -66,8 +65,8 @@ public class SpringUtil {
 		return beanNames;
 	}
 
-	public static <T> List<T> getBeans(Class<T> type) {
-		List<T> beans = new ArrayList<T>();
+	public static <T> Set<T> getBeans(Class<T> type) {
+		Set<T> beans = new HashSet<T>();
 		for (String beanName : getBeanNamesForType(type)) {
 			T bean = getBean(type, beanName);
 			beans.add(bean);
